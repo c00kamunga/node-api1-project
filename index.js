@@ -92,4 +92,30 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
+//Endpoint for updating a users information
+server.put('/api/users/:id', (req, res) => {
+    if(!req.body.name && ! req.body.bio) {
+        return res
+        .status(400)
+        .json({ errorMessage: "Please provide the name and bio of the user" })
+    }
+    db.updateUser(req.params.id, req.body)
+    .then(updateUser => {
+        if(updatedPost) {
+            res
+            .status(200)
+            .json(updateUser)
+        } else {
+            res
+            .status(404)
+            .json({ message: "The user with the specified ID does not exist" })
+        }
+    })
+    .catch(error => {
+        res
+        .status(500)
+        .json({ error: "The post information could not be modified" })
+    })
+})
 
+module.exports = server
