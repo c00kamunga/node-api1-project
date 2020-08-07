@@ -72,4 +72,24 @@ server.get('/api/users/:id', (req, res) => {
    }
 })
 
+//Endpoint for deleting a user with a specified ID
+server.delete('/api/users/:id', (req, res) => {
+    db.deleteUser(req.params.id)
+    .then(removedUser => {
+        if(!removedUser){
+            res.status(404)
+            .json({ message: "The user with the specified ID does not exist" })
+        } else {
+            res
+            .status(200)
+            .json(removedUser)
+        }
+    })
+    .catch(error => {
+        res
+        .status(500)
+        .json({ error: "The user could not be removed"})
+    })
+})
+
 
