@@ -73,38 +73,56 @@ server.get('/api/users/:id', (req, res) => {
 })
 
 //Endpoint for deleting a user with a specified ID
+
+
 server.delete('/api/users/:id', (req, res) => {
-    db.deleteUser(req.params.id)
-    .then(removedUser => {
-        if(!removedUser){
-            res.status(404)
-            .json({ message: "The user with the specified ID does not exist" })
+    const id = req.params.id;
+    const userToDelete = db.getUserById(id)
+
+    if (!userToDelete) {
+        res.status(500).json({
+            errorMessage: "This does not work!"
+        })
+    } else if (userToDelete) {
+            db.deleteUser(id)
+            res.status(200).json(userToDelete);
         } else {
-            res
-            .status(200)
-            .json(removedUser)
+            res.status(404).json({ errorMessage: "The ID does not exist"})
         }
-    })
-    .catch(error => {
-        res
-        .status(500)
-        .json({ error: "The user could not be removed"})
-    })
 })
+//console.log(req.params.id)
+// .then(removedUser => {
+//     db.deleteUser(req.params.id)
+//         //console.log(removedUser)
+//         if(!removedUser){
+//             res.status(404)
+//             .json({ message: "The user with the specified ID does not exist" })
+//         } else {
+//             res
+//             .status(200)
+//             .json(removedUser)
+//         }
+//     })
+    // .catch(error => {
+    //     res
+    //     .status(500)
+    //     .json({ error: "The user could not be removed"})
+    // })
 
 //Endpoint for updating a users information
 server.put('/api/users/:id', (req, res) => {
-    if(!req.body.name && ! req.body.bio) {
+    if(!req.body.name && !req.body.bio) {
         return res
         .status(400)
         .json({ errorMessage: "Please provide the name and bio of the user" })
     }
-    db.updateUser(req.params.id, req.body)
-    .then(updateUser => {
-        if(updatedPost) {
+    return db.updateUser(req.params.id, ...req.body)
+    .then(updatedUser => {
+        console.log(updatedUser)
+        if(updatedUser) {
             res
             .status(200)
-            .json(updateUser)
+            .json(updatedUser)
         } else {
             res
             .status(404)
@@ -118,4 +136,4 @@ server.put('/api/users/:id', (req, res) => {
     })
 })
 
-module.exports = server
+
