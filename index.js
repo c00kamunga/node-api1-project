@@ -111,29 +111,56 @@ server.delete('/api/users/:id', (req, res) => {
 
 //Endpoint for updating a users information
 server.put('/api/users/:id', (req, res) => {
-    if(!req.body.name && !req.body.bio) {
-        return res
+
+
+    const updatedUser = req.body
+    const id = req.params.id
+    const userID = db.getUserById(id)
+     
+console.log(updatedUser)
+
+    if(!userID) {
+        res
+        .status(404)
+        .json({ errorMessage: "User ID does not exist" })
+    } else if (!updatedUser.name && !updatedUser.bio) {
+        res
         .status(400)
-        .json({ errorMessage: "Please provide the name and bio of the user" })
-    }
-    return db.updateUser(req.params.id, ...req.body)
-    .then(updatedUser => {
-        console.log(updatedUser)
-        if(updatedUser) {
-            res
-            .status(200)
-            .json(updatedUser)
-        } else {
-            res
-            .status(404)
-            .json({ message: "The user with the specified ID does not exist" })
-        }
-    })
-    .catch(error => {
+        .json({errorMessage: "Please edit name and bio"})
+    } else if (userID) {
+        db.updateUser(userID, updatedUser)
+        res
+        .status(200)
+        .json(updatedUser)
+    } else {
         res
         .status(500)
-        .json({ error: "The post information could not be modified" })
-    })
+        .json({ errorMessage: "There was an issue with the server" })
+    }
+
+    // if(!req.body.name && !req.body.bio) {
+    //     return res
+    //     .status(400)
+    //     .json({ errorMessage: "Please provide the name and bio of the user" })
+    // }
+    // return db.updateUser(req.params.id, ...req.body)
+    // .then(updatedUser => {
+    //     console.log(updatedUser)
+    //     if(updatedUser) {
+    //         res
+    //         .status(200)
+    //         .json(updatedUser)
+    //     } else {
+    //         res
+    //         .status(404)
+    //         .json({ message: "The user with the specified ID does not exist" })
+    //     }
+    // })
+    // .catch(error => {
+    //     res
+    //     .status(500)
+    //     .json({ error: "The post information could not be modified" })
+    // })
 })
 
 
