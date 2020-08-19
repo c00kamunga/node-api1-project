@@ -3,10 +3,9 @@ const server = express()
 const db = require('./db')
 const { json } = require('express')
 const port = 7654
-
 server.use(express.json())
 
-server.listen(port, () => {
+server.listen(process.env.PORT || port, () => {
     console.log(`\n *** server is listening on port ${port} *** \n`)
 })
 
