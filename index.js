@@ -90,35 +90,15 @@ server.delete('/api/users/:id', (req, res) => {
             res.status(404).json({ errorMessage: "The ID does not exist"})
         }
 })
-//console.log(req.params.id)
-// .then(removedUser => {
-//     db.deleteUser(req.params.id)
-//         //console.log(removedUser)
-//         if(!removedUser){
-//             res.status(404)
-//             .json({ message: "The user with the specified ID does not exist" })
-//         } else {
-//             res
-//             .status(200)
-//             .json(removedUser)
-//         }
-//     })
-    // .catch(error => {
-    //     res
-    //     .status(500)
-    //     .json({ error: "The user could not be removed"})
-    // })
+
 
 //Endpoint for updating a users information
 server.put('/api/users/:id', (req, res) => {
-
 
     const updatedUser = req.body
     const id = req.params.id
     const userID = db.getUserById(id)
      
-console.log(updatedUser)
-
     if(!userID) {
         res
         .status(404)
@@ -137,30 +117,6 @@ console.log(updatedUser)
         .status(500)
         .json({ errorMessage: "There was an issue with the server" })
     }
-
-    // if(!req.body.name && !req.body.bio) {
-    //     return res
-    //     .status(400)
-    //     .json({ errorMessage: "Please provide the name and bio of the user" })
-    // }
-    // return db.updateUser(req.params.id, ...req.body)
-    // .then(updatedUser => {
-    //     console.log(updatedUser)
-    //     if(updatedUser) {
-    //         res
-    //         .status(200)
-    //         .json(updatedUser)
-    //     } else {
-    //         res
-    //         .status(404)
-    //         .json({ message: "The user with the specified ID does not exist" })
-    //     }
-    // })
-    // .catch(error => {
-    //     res
-    //     .status(500)
-    //     .json({ error: "The post information could not be modified" })
-    // })
 })
 
 
